@@ -3,15 +3,20 @@ Lightweight Windows Keyboard &amp; Mouse input library using hardware scan codes
 
 Unlike existing libraries like `pyautogui` that use virtual key presses, `scanput` uses hardware scan codes making them indistinguishable* from physical hardware keypresses to most applications.
 
-While the `AutoHotKey` Python library does offer hardware scan code inputs, the library requires having `AutoHotKey` installed, pointing your script to executable path, and then spawns a new `AutoHotKey.exe` subprocess *every time* you perform any action - not exactly lightweight. 
+While the `AutoHotKey` Python library does offer hardware scan code inputs, the library requires having `AutoHotKey` installed and pointing your script to the executable path. It then spawns a new `AutoHotKey.exe` subprocess *every time* you perform an action - not exactly lightweight. 
 
-`scanput` is designed to be lightweight and has zero third-party required dependencies.
+`scanput` is designed to be lightweight and requires zero third-party dependencies.
 
 <sub>*Technically, Windows sets the `LLMHF_INJECTED` flag on synthesized input events to indicate they originated from `SendInput` rather than a physical device. It is rare for applications to check this flag, but it is possible. Full reference [here](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-kbdllhookstruct)  </sub>
 
 ## Installation
 ```
 pip install scanput
+```
+Alternatively, you could save `scanput.py` to your project's root directory and `import scanput`. It's literally a single file that needs importing:
+```
+cd my-project
+curl https://raw.githubusercontent.com/sam-howle/scanput/refs/heads/main/scanput.py -o scanput.py
 ```
 
 ## Usage
