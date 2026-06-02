@@ -9,6 +9,11 @@ While the `AutoHotKey` Python library does offer hardware scan code inputs, the 
 
 <sub>*Technically, Windows sets the `LLMHF_INJECTED` flag on synthesized input events to indicate they originated from `SendInput` rather than a physical device. It is rare for applications to check this flag, but it is possible. Full reference [here](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-kbdllhookstruct)  </sub>
 
+## Installation
+```
+pip install scanput
+```
+
 ## Usage
 A more detailed guide can be found in `demo.py`.
 
