@@ -5,14 +5,14 @@ Unlike existing libraries like `pyautogui` that use virtual key presses, `scanpu
 
 While the `AutoHotKey` Python library does offer hardware scan code inputs, the library requires having `AutoHotKey` installed, pointing to the file path to the .exe, and then spawns a new `AutoHotKey.exe` subprocess *every time* you perform any action. 
 
-`scanput` is designed to be lightweight and has zero required dependencies.
+`scanput` is designed to be lightweight and has zero third-party required dependencies.
 
 ## Usage
 A more detailed guide can be found in `demo.py`.
 
 ### Key Presses
 All button pressing & mouse clicking functions require both a press and a release. Pressing a key without releasing it will result in the key being held down indefinately. 
-It is recommended to add a short delay between presses. For example:
+It is recommended to add a short timing delay between presses. For example:
 ```python
 HOLD = 0.08
 key_down("k")
@@ -54,7 +54,17 @@ dest_x, dest_y = x + 300, y - 150
 print(f"Teleporting mouse to ({dest_x}, {dest_y})")
 set_cursor_position(dest_x, dest_y)
 ```
-Please note that the Y axis for monitor pixel coordinates starts with `0` being the top of the screen, rather than the bottom. That means the coordinate `(0,0)` is the top-left monitor pixel. While unintuitive, it is consistent with how monitor pixel coordinates have always worked starting with early CRT's. 
+Please note that the Y axis for monitor pixel coordinates starts with `0` being the top of the screen, rather than the bottom. That means the coordinate `(0,0)` is the top-left monitor pixel. While unintuitive, it is consistent with how monitor pixel coordinates have always worked starting with early CRTs. 
+
+### Toggle Key States
+The `get_toggle_key_state()` function can be used to let your script know the current state of the `capslock`, `numlock`, and `scrolllock` keys:
+```python
+get_toggle_key_state("capslock")   # 1 or 0
+get_toggle_key_state("numlock")    # 1 or 0
+get_toggle_key_state("scrolllock") # 1 or 0
+get_toggle_key_state(0x14)         # same as capslock by VK int
+```
+Be aware that this function is only meaningful for toggle keys. Passing modifier keys like `shift` or `alt` will always return `0`.
 
 And that's really all there is to it. 
 
