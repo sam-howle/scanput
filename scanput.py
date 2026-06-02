@@ -8,6 +8,7 @@ ctypes.windll.user32.SetProcessDPIAware()
 __all__ = [
     "KEY_ALIASES",
     "get_cursor_position",
+    "get_toggle_key_state",
     "key_down",
     "key_up",
     "left_down",
@@ -146,6 +147,10 @@ _VkKeyScanW = ctypes.windll.user32.VkKeyScanW
 _VkKeyScanW.argtypes = (ctypes.wintypes.WCHAR,)
 _VkKeyScanW.restype = ctypes.c_short
 
+_GetKeyState = ctypes.windll.user32.GetKeyState
+_GetKeyState.argtypes = (ctypes.c_int,)
+_GetKeyState.restype = ctypes.c_short
+
 
 def _send_input(input_event: _INPUT) -> None:
     sent = _SendInput(1, ctypes.byref(input_event), ctypes.sizeof(_INPUT))
@@ -218,6 +223,12 @@ def get_cursor_position() -> tuple[int, int]:
     pos = ctypes.wintypes.POINT()
     ctypes.windll.user32.GetCursorPos(ctypes.byref(pos))
     return pos.x, pos.y
+
+
+def get_toggle_key_state(key: str | int) -> int:
+    """Returns 1 if the toggle key is on, 0 if off. Works for capslock, numlock, scrolllock."""
+    vk, _ = _vk_from_key(key)
+    return int(_GetKeyState(vk) & 0x0001)
 
 
 def left_down() -> None:
