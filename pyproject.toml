@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "scanput"
+version = "0.1.0"
+description = "Windows SendInput wrapper for keyboard and mouse simulation"
+requires-python = ">=3.7"
+license = {text = "MIT"}
+authors = [
+    {name = "Sam Howle", email = "samhowle@protonmail.com"}
+]
+classifiers = [
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Libraries",
+]
+
+[tool.setuptools]
+py-modules = ["scanput"]
