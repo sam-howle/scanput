@@ -3,6 +3,8 @@ Lightweight Windows Keyboard &amp; Mouse input library using hardware scan codes
 
 Unlike existing libraries like `pyautogui` that use virtual key presses, scanput uses hardware scan codes making them indistinguishable* from physical hardware keypresses to most applications.
 
+While the `AutoHotKey` Python library does offer hardware scan code inputs, the library requires having `autohotkey` installed, pointing to the file path to the .exe, and then spawns a new `autohotkey.exe` subprocess *every time* you perform any action. 
+
 `scanput` is designed to be lightweight and has zero required dependencies.
 
 ## Usage
