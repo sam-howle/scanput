@@ -22,7 +22,7 @@ key_up("k")
 The above example presses the `k` key and holds it for 0.08 seconds before releasing.
 
 For a list of key aliases, run the following line:
-```
+```python
 print(list(KEY_ALIASES.keys()))
 ```
 Additionally, `key_down()` and `key_up()` accept either a key name string or a raw Windows Virtual Key code as an integer, allowing direct specification of any VK code not covered by the named aliases. The Windows Virtual Key code is converted to a hardware scan code before input is performed. A full list of Windows VK integers can be found at the following link: 
