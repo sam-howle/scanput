@@ -23,7 +23,7 @@ for char in alphabet:
     time.sleep(BETWEEN_KEYPRESS_DELAY)
 
 key_down("shift")
-print("Typing the alphabet while KEY_HOLD_TIMEing shift.")
+print("Typing the alphabet while holding shift.")
 for char in alphabet:
     key_down(char)
     time.sleep(KEY_HOLD_TIME)
