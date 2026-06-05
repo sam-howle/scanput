@@ -8,6 +8,7 @@ ctypes.windll.user32.SetProcessDPIAware()
 __all__ = [
     "KEY_ALIASES",
     "get_cursor_position",
+    "get_screen_resolution",
     "get_toggle_key_state",
     "key_down",
     "key_up",
@@ -217,6 +218,12 @@ def _send_key_event(vk: int, is_key_up: bool = False) -> None:
 
 def set_cursor_position(x: int, y: int) -> None:
     ctypes.windll.user32.SetCursorPos(int(x), int(y))
+
+
+def get_screen_resolution() -> tuple[int, int]:
+    width = ctypes.windll.user32.GetSystemMetrics(0)
+    height = ctypes.windll.user32.GetSystemMetrics(1)
+    return width, height
 
 
 def get_cursor_position() -> tuple[int, int]:
