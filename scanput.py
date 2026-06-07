@@ -50,6 +50,7 @@ KEY_ALIASES: dict[str, int] = {
     "esc": 0x1B,
     "escape": 0x1B,
     "space": 0x20,
+    " ": 0x20,
     "pageup": 0x21,
     "page_up": 0x21,
     "pagedown": 0x22,
@@ -174,7 +175,17 @@ def _vk_from_key(key: str | int) -> tuple[int, list[int]]:
     if isinstance(key, int):
         return key, []
 
-    normalized_key = key.strip().lower()
+    # Edge cases where .strip() breaks.
+    if key == " ":
+        return KEY_ALIASES['space'], []
+    if key == '\n':
+        return KEY_ALIASES['enter'], []
+    if key == '\t':
+        return KEY_ALIASES['tab'], []
+    if key == '\b':
+        return KEY_ALIASES['backspace'], []
+
+    normalized_key = key.strip().lower() 
     if normalized_key in KEY_ALIASES:
         return KEY_ALIASES[normalized_key], []
 
