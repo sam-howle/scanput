@@ -153,6 +153,22 @@ _GetKeyState = ctypes.windll.user32.GetKeyState
 _GetKeyState.argtypes = (ctypes.c_int,)
 _GetKeyState.restype = ctypes.c_short
 
+_GetAsyncKeyState = ctypes.windll.user32.GetAsyncKeyState
+_GetAsyncKeyState.argtypes = (ctypes.c_int,)
+_GetAsyncKeyState.restype = ctypes.c_short
+
+# VKs currently held down via key_down() (including auto-pressed modifiers).
+_held_vks: set[int] = set()
+# Main VK -> modifier VKs that key_down() auto-pressed for it, to be released on key_up().
+_auto_mods: dict[int, list[int]] = {}
+
+
+def _is_held(vk: int) -> bool:
+    """True if vk is currently held, either by us or physically on the keyboard."""
+    if vk in _held_vks:
+        return True
+    return bool(_GetAsyncKeyState(vk) & 0x8000)
+
 
 def _send_input(input_event: _INPUT) -> None:
     sent = _SendInput(1, ctypes.byref(input_event), ctypes.sizeof(_INPUT))
@@ -172,7 +188,7 @@ def _mouse_event(flags: int) -> None:
 
 def _vk_from_key(key: str | int) -> tuple[int, list[int]]:
     """Returns (vk_code, [required_modifier_vks])."""
-    if isinstance(key, int):
+    if isinstance(key, int): # If VK int supplied, just return it.
         return key, []
 
     # Edge cases where .strip() breaks.
@@ -228,16 +244,19 @@ def _send_key_event(vk: int, is_key_up: bool = False) -> None:
 
 
 def set_cursor_position(x: int, y: int) -> None:
+    """Moves the cursor to the given screen coordinates."""
     ctypes.windll.user32.SetCursorPos(int(x), int(y))
 
 
 def get_screen_resolution() -> tuple[int, int]:
+    """Returns the primary screen resolution as (width, height)."""
     width = ctypes.windll.user32.GetSystemMetrics(0)
     height = ctypes.windll.user32.GetSystemMetrics(1)
     return width, height
 
 
 def get_cursor_position() -> tuple[int, int]:
+    """Returns the current cursor position as (x, y)."""
     pos = ctypes.wintypes.POINT()
     ctypes.windll.user32.GetCursorPos(ctypes.byref(pos))
     return pos.x, pos.y
@@ -250,30 +269,45 @@ def get_toggle_key_state(key: str | int) -> int:
 
 
 def left_down() -> None:
+    """Presses and holds the left mouse button."""
     _mouse_event(_MOUSEEVENTF_LEFTDOWN)
 
 
 def left_up() -> None:
+    """Releases the left mouse button."""
     _mouse_event(_MOUSEEVENTF_LEFTUP)
 
 
 def right_down() -> None:
+    """Presses and holds the right mouse button."""
     _mouse_event(_MOUSEEVENTF_RIGHTDOWN)
 
 
 def right_up() -> None:
+    """Releases the right mouse button."""
     _mouse_event(_MOUSEEVENTF_RIGHTUP)
 
 
 def key_down(key: str | int) -> None:
+    """Presses and holds key, auto-pressing any required modifiers (e.g. Shift for '!') that aren't already held."""
     vk, mods = _vk_from_key(key)
+    pressed_mods = []
     for mod_vk in mods:
-        _send_key_event(mod_vk)
+        if not _is_held(mod_vk):
+            _send_key_event(mod_vk)
+            _held_vks.add(mod_vk)
+            pressed_mods.append(mod_vk)
     _send_key_event(vk)
+    _held_vks.add(vk)
+    if pressed_mods:
+        _auto_mods.setdefault(vk, []).extend(pressed_mods)
 
 
 def key_up(key: str | int) -> None:
-    vk, mods = _vk_from_key(key)
+    """Releases key, and releases any modifiers that key_down() auto-pressed for it."""
+    vk, _mods = _vk_from_key(key)
     _send_key_event(vk, is_key_up=True)
-    for mod_vk in reversed(mods):
+    _held_vks.discard(vk)
+    for mod_vk in reversed(_auto_mods.pop(vk, [])):
         _send_key_event(mod_vk, is_key_up=True)
+        _held_vks.discard(mod_vk)
