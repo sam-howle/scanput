@@ -4,18 +4,24 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "scanput"
-version = "0.1.0"
+version = "0.2.1"
 description = "Windows SendInput wrapper for keyboard and mouse simulation"
+readme = "README.md"
 requires-python = ">=3.7"
 license = {text = "MIT"}
 authors = [
     {name = "Sam Howle", email = "samhowle@protonmail.com"}
 ]
+keywords = ["windows", "sendinput", "keyboard", "mouse", "automation", "scancode", "input"]
 classifiers = [
+    "License :: OSI Approved :: MIT License",
     "Operating System :: Microsoft :: Windows",
     "Programming Language :: Python :: 3",
     "Topic :: Software Development :: Libraries",
 ]
+
+[project.urls]
+Repository = "https://github.com/sam-howle/scanput"
 
 [tool.setuptools]
 py-modules = ["scanput"]
