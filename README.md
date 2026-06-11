@@ -68,6 +68,17 @@ set_cursor_position(dest_x, dest_y)
 ```
 Please note that the Y axis for monitor pixel coordinates starts with `0` being the top of the screen, rather than the bottom. That means the coordinate `(0,0)` is the top-left monitor pixel. While unintuitive, it is consistent with how monitor pixel coordinates have always worked starting with early CRTs. 
 
+### Screen Resolution
+The `get_screen_resolution()` function returns the primary monitor's resolution as `(width, height)`, which is handy for clamping cursor coordinates or calculating positions relative to the screen size:
+```python
+width, height = get_screen_resolution()
+print(f"Screen resolution: {width}x{height}")
+
+center_x, center_y = width // 2, height // 2
+print(f"Teleporting mouse to center of screen: ({center_x}, {center_y})")
+set_cursor_position(center_x, center_y)
+```
+
 ### Toggle Key States
 The `get_toggle_key_state()` function can be used to let your script know the current state of the `capslock`, `numlock`, and `scrolllock` keys:
 ```python
